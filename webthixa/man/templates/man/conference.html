@@ -1,0 +1,61 @@
+{% extends "man/base.html" %}
+{% block content %}
+
+	<div class="row height d-flex justify-content-center align-items-center mb-3 mt-3">
+		<h4 class="text-center">{{ conference.name }}</h4>
+	</div>
+
+	<!-- SHOW NAMEPLATE -->
+	<h4>Các biển bảng hiện có:</h4>
+
+		<!-- Search form -->
+	<div class="row height d-flex justify-content-center align-items-center mb-4">
+		<div class="col-md-6">
+			<input class="form-control mb-4 " id="nameplateSearch" type="text" placeholder="Tìm kiếm">
+		</div>
+	</div>
+
+		<!-- list nameplate -->
+	<div class="row height d-flex justify-content-center align-items-center mb-4">
+		<div id="allNameplate" class="row" data-masonry='{"percentPosition": true }'>
+			{% for nameplate in conference.nameplate_set.all %}
+					<div class="col-sm-6 col-lg-4 mb-4 aNameplate">
+						<a href="{% url 'man:nameplate' nameplate.id %}" class="nav-link">
+						<div class="card text-center">
+							<div class="card-body">
+							  	<h6 class="card-title fw-bolder">{{ nameplate.name }}</h6>
+							  	<p class="card-text fw-lighter">
+							  		{% for element in nameplate.element_set.all %}
+							  			{{ element.category.name }};
+							  		{% endfor %}
+							  		<br>
+							  		<small class="fw-normal fst-italic">{{ nameplate.conference.name }}</small>
+							  	</p>
+							</div>
+						</div>
+						</a>
+					</div>
+			{% endfor %}
+		</div>
+	</div>
+	<!-- END SHOW NAMEPLATE -->
+
+	<!-- BUTTONs -->
+	<div class="d-flex flex-row-reverse">
+	  <div class="p-2"><a href="{% url 'man:home' %}"><button type="button" class="btn btn-dark">Trang chủ</button></a></div>
+	  <div class="p-2"><a href="{% url 'man:edit_conference' conference.id %}"><button type="button" class="btn btn-dark">Chỉnh sửa</button></a></div>
+	</div>
+
+	<script>
+		// Filter nameplate
+		$(document).ready(function(){
+			$("#nameplateSearch").on("keyup", function() {
+				var value = removeVietnameseTones($(this).val().toLowerCase());
+				$("#allNameplate .aNameplate").filter(function() {
+				  	$(this).toggle(removeVietnameseTones($(this).text()).toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
+	</script>
+
+{% endblock %}

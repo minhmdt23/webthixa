@@ -1,0 +1,23 @@
+{% extends "man/base.html" %}
+{% block content %}
+
+<center>
+	<h4>Biển bảng: {{ nameplate.name }} </h4>
+
+	{% if nameplate.conference %}
+		<h4>Vị trí: <a href="{% url 'man:conference' nameplate.conference.id %}">{{ nameplate.conference.name }}</a> </h4>
+	{% else %}
+		<h4>Chưa có vị trí</h4>
+	{% endif %}
+
+	<h4>Thuộc nhóm: </h4>
+	{% for element in nameplate.element_set.all %}
+		- <a href="{% url 'man:category' element.category.id %}">{{ element.category.name }}</a><br>
+	{% endfor %}
+	<br>
+	<div class="d-flex flex-row-reverse">
+	  <div class="p-2"><a href="{% url 'man:home' %}"><button type="button" class="btn btn-dark">Trang chủ</button></a></div>
+	</div>
+</center>
+
+{% endblock %}

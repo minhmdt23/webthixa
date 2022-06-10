@@ -1,0 +1,23 @@
+{% extends "man/base.html" %}
+
+{% block content %}
+
+<center><h1>Hoàn thành các công đoạn sau:</h1></center>
+
+<h5>Thêm:</h5>
+{% for nameplate in add_nameplate %}
+	- {{ nameplate.name }}<br>
+{% endfor %}
+
+<h5>Gỡ</h5>
+{% for nameplate in remove_nameplate %}
+	- {{ nameplate.name }}<br>
+{% endfor %}
+<br>
+
+<div class="d-flex flex-row-reverse">
+  <div class="p-2"><a href="{% url 'man:home' %}"><button type="button" class="btn btn-dark">Trang chủ</button></a></div>
+</div>
+
+
+{% endblock %}

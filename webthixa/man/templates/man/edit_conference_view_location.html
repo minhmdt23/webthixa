@@ -1,0 +1,103 @@
+{% extends "man/base.html" %}
+
+{% block content %}
+
+
+
+<div id="accordion">
+	{% for conference in conference %}
+		 <div class="card mt-3">
+			{% if conference %}
+				<div class="card-header">
+			        <a class="card-link" data-toggle="collapse" href="#cfc{{conference.id}}">
+			         {{ conference.name }}
+			        </a>
+		      </div>
+			{% else %}
+				<div class="card-header">
+			        <a class="card-link" data-toggle="collapse" href="#{{conference.id}}">
+			         Không hội nghị
+			        </a>
+		      </div>
+			{% endif %}
+
+			<div id="cfc{{conference.id}}" class="collapse" data-parent="#accordion">
+		        <div class="card-body">
+			        <div class="list-group">
+						{% for nameplate in add_nameplate %}
+							{% if nameplate.conference.id == conference.id %}
+								<a href="#" class="list-group-item list-group-item-action">{{ nameplate.name }}</a>
+							{% endif %}
+						{% endfor %}
+					</div>
+		        </div>
+	  		</div>
+		</div>
+	{% endfor %}
+</div>
+
+<form method="post" action="{% url 'man:completed' %}">
+	{% csrf_token %}
+		<input type="hidden" value="{{ conference_id }}" name="conference_id" readonly>
+	{% for nameplate in add_nameplate %}
+		<input type="hidden" value="{{ nameplate.id }}" name="add_nameplate" readonly>
+	{% endfor %}
+
+	{% for nameplate in unchoose_nameplate %}
+		{% if nameplate.conference.id == conference_id %}
+			<input type="hidden" value="{{ nameplate.id }}" name="remove_nameplate" readonly>
+		{% endif %}
+	{% endfor %}
+	<br>
+	<div class="d-flex flex-row-reverse">
+	  <div class="p-2"><a href="{% url 'man:home' %}"><button type="button" class="btn btn-dark">Trang chủ</button></a></div>
+	  <div class="p-2"><a href="#"><button type="submit" class="btn btn-dark">Hoàn thành</button></a></div>
+	</div>
+
+
+
+
+</form>
+<br>
+<!-- prevent form resubmission -->
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

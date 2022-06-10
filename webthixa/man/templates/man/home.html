@@ -1,0 +1,95 @@
+{% extends "man/base.html" %}
+{% block content %}
+	<!-- CSS -->
+	<style type="text/css">
+		.form-control:focus {
+		  box-shadow: none;
+		}
+	</style>
+	<!-- END CSS -->
+
+
+	<!-- SHOW CONFERENCE -->
+	<h4 class="mt-3">Hội nghị</h4>
+
+		<!-- seach conference box -->
+	<div class="row height d-flex justify-content-center align-items-center mb-3">
+		<div class="col-md-6">
+			<input class="form-control mb-4 " id="conferenceSearch" type="text" placeholder="Tìm kiếm">
+		</div>
+	</div>
+
+		<!-- list conference -->
+	<div id="allConference" class="list-group w-auto">
+		{% for conference in conference %}
+			<div class="aConference">
+				<a href="{% url 'man:conference' conference.id %}" class="list-group-item list-group-item-action d-flex gap-3 py-3 mb-3" aria-current="true">
+					<div class="d-flex gap-2 w-100 justify-content-between">
+						<div>					
+							<h6 class="mb-0">{{ conference.name }}</h6>
+						</div>
+						<small class="opacity-50 text-nowrap">{{ conference.date_fomat_d_m_y }}</small>
+					</div>
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+	<!-- END SHOW CONFERENCE -->
+
+	
+
+	<!-- SHOW NAMEPLATE -->
+	<h4>Biển bảng - Thể loại</h4>
+
+		<!-- Search form -->
+	<div class="row height d-flex justify-content-center align-items-center mb-4">
+		<div class="col-md-6">
+			<input class="form-control mb-4 " id="nameplateSearch" type="text" placeholder="Tìm kiếm">
+		</div>
+	</div>
+		<!-- list nameplate -->
+	<div class="row height d-flex justify-content-center align-items-center mb-4">
+		<div id="allNameplate" class="row" data-masonry='{"percentPosition": true }'>
+			{% for nameplate in nameplate %}
+					<div class="col-sm-6 col-lg-4 mb-4 aNameplate">
+						<a href="{% url 'man:nameplate' nameplate.id %}" class="nav-link">
+						<div class="card text-center">
+							<div class="card-body">
+							  	<h6 class="card-title fw-bolder">{{ nameplate.name }}</h6>
+							  	<p class="card-text fw-lighter">
+							  		{% for element in nameplate.element_set.all %}
+							  			{{ element.category.name }};
+							  		{% endfor %}
+							  		<br>
+							  		<small class="fw-normal fst-italic">{{ nameplate.conference.name }}</small>
+							  	</p>
+							</div>
+						</div>
+						</a>
+					</div>
+			{% endfor %}
+		</div>
+	</div>
+	<!-- END SHOW NAMEPLATE -->
+
+	<script>
+		// Filter nameplate
+		$(document).ready(function(){
+			$("#nameplateSearch").on("keyup", function() {
+				var value = removeVietnameseTones($(this).val().toLowerCase());
+				$("#allNameplate .aNameplate").filter(function() {
+				  	$(this).toggle(removeVietnameseTones($(this).text()).toLowerCase().indexOf(value) > -1)
+				});
+			});
+
+			// Filter conference
+			$("#conferenceSearch").on("keyup", function() {
+				var value = removeVietnameseTones($(this).val().toLowerCase());
+				$("#allConference .aConference").filter(function() {
+				  	$(this).toggle(removeVietnameseTones($(this).text()).toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
+	</script>
+
+{% endblock %}

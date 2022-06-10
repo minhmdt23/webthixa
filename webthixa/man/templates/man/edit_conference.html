@@ -1,0 +1,75 @@
+{% extends "man/base.html" %}
+
+{% block content %}
+	<h4 class="text-center mt-3">{{ conference.name }}</h4>
+
+
+	<h4>Chọn các biển bảng:</h4>
+
+	<!-- Search form -->
+	<div class="row height d-flex justify-content-center align-items-center">
+		<div class="col-md-6">
+			<input class="form-control mb-4 " id="nameplateSearch" type="text" placeholder="Tìm kiếm">
+		</div>
+	</div>
+	
+
+
+
+	<!-- Choose nameplate -->
+	<form method="post" action="{% url 'man:view_location' conference.id %}">
+		{% csrf_token %}
+
+		<!-- BUTTONs -->
+		<div class="d-flex flex-row-reverse">
+		  <div class="p-2"><a href="{% url 'man:home' %}"><button type="button" class="btn btn-dark">Trang chủ</button></a></div>
+		  <div class="p-2"><a href="{% url 'man:edit_conference' conference.id %}"><button type="submit" class="btn btn-dark">Xem vị trí</button></a></div>
+		</div>
+
+		<center>
+		<section id="allNameplate" class="ftco-section">
+			<ul class="ks-cboxtags">
+				{% for nameplate in nameplate %}
+					{% if nameplate.conference.id == conference.id %}
+						<li class="aNameplate">
+							<input id="{{ nameplate.id }}" type="checkbox" value="{{ nameplate.id }}" name="nameplate" checked="checked">
+							<label for="{{ nameplate.id }}" class="nameplate-name">
+								{{ nameplate.name }}<br>
+							</label>
+						</li>
+					{% else %}
+						<li class="aNameplate">
+							<input  id="{{ nameplate.id }}"type="checkbox" value="{{ nameplate.id }}" name="nameplate">
+							<label for="{{ nameplate.id }}">{{ nameplate.name }}</label>
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</section>
+		</center>
+
+	</form>
+
+	<!-- prevent form resubmission -->
+	<script>
+	    if ( window.history.replaceState ) {
+	        window.history.replaceState( null, null, window.location.href );
+	    }
+	</script>
+	<script>
+		// Filter nameplate
+		$(document).ready(function(){
+			$("#nameplateSearch").on("keyup", function() {
+				var value = removeVietnameseTones($(this).val().toLowerCase());
+				$("#allNameplate .aNameplate").filter(function() {
+				  	$(this).toggle(removeVietnameseTones($(this).text()).toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
+	</script>
+
+{% endblock %}
+
+
+
+
